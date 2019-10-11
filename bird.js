@@ -32,7 +32,7 @@ function generateInitialState() {
 
 function generateMap() {
     const H_SPACE = 400;
-    const V_SPACE = 100;
+    const V_SPACE = 200;
 
     return {
         columns: _.range(4, 1000).map((i) => {
