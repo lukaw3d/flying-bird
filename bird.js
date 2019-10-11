@@ -26,6 +26,7 @@ function generateInitialState() {
             h: 20,
             xspeed: 0.4,
             yspeed: 0,
+            yaccel: 0,
         },
         map: generateMap(),
     };
@@ -52,13 +53,18 @@ function generateMap() {
     };
 }
 
-const GRAVITY = 0.0001;
+const GRAVITY = 0.00007;
+const SPEED_BOOST = GRAVITY * 10000;
+const ACCEL_BOOST = GRAVITY / 10;
 
 function updateState(delta) {
     if (state.playing === 'flying') {
+        state.bird.yaccel = _.clamp(state.bird.yaccel + ACCEL_BOOST / 5, -ACCEL_BOOST, 0);
+
+        state.bird.yspeed += (GRAVITY + state.bird.yaccel) * delta * delta;
+
         state.bird.x += state.bird.xspeed * delta;
         state.bird.y += state.bird.yspeed * delta;
-        state.bird.yspeed += GRAVITY * delta * delta;
 
         const mapCollision = state.map.columns.some((rect) => {
             return state.bird.x + state.bird.w > rect.x &&
@@ -88,7 +94,8 @@ function saveScore() {
 
 canvas.addEventListener('click', () => {
     if (state.playing === 'flying') {
-        state.bird.yspeed = _.clamp(state.bird.yspeed - GRAVITY * 10000, -1, 1);
+        state.bird.yspeed -= SPEED_BOOST;
+        state.bird.yaccel -= ACCEL_BOOST;
         return;
     }
 
