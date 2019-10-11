@@ -110,22 +110,21 @@ canvas.addEventListener('click', () => {
 let lastUpdate = 0;
 function draw(time) {
     updateState(time - lastUpdate);
+    lastUpdate = time;
 
     // Draw
-    ctx.fillStyle = '#eee';
+    ctx.fillStyle = '#6cc';
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
     // Center screen
-    ctx.translate(-state.bird.x, 0);
-    if (state.playing === 'flying') {
-        state.map.columns.forEach(({x, y, w, h}) => {
-            ctx.fillStyle = '#6c6';
-            ctx.fillRect(x, y, w, h);
-        });
+    ctx.translate(-state.bird.x + WIDTH * 0.3, 0);
+    state.map.columns.forEach(({x, y, w, h}) => {
+        ctx.fillStyle = '#7b2';
+        ctx.fillRect(x, y, w, h);
+    });
 
-        ctx.fillStyle = '#cc6';
-        ctx.fillRect(state.bird.x, state.bird.y, state.bird.w, state.bird.h);
-    }
+    ctx.fillStyle = '#e81';
+    ctx.fillRect(state.bird.x, state.bird.y, state.bird.w, state.bird.h);
 
     ctx.resetTransform();
     if (state.playing === 'flying') {
@@ -143,8 +142,6 @@ function draw(time) {
         ctx.fillText(`Click to restart`, WIDTH / 2, 400);
     }
 
-    lastUpdate = time;
     window.requestAnimationFrame(draw);
 }
 window.requestAnimationFrame(draw);
-
