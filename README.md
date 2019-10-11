@@ -1,5 +1,9 @@
 Flying bird [not trademarked]
 
+## How to run
+
+Open index.html in modern browser
+
 ## Functionality
 
 Best score -> localStorage
