@@ -14,8 +14,8 @@ Generate random map
 
 Not using a game engine:
 - so need to keep track of acceleration
-- can draw everything as squares, later maybe replace with sprites
-- collision mask
+- can draw everything as rectangle, later maybe replace with sprites
+- can collide as rectangles, later maybe collision mask
 
 Maybe native canvas, maybe Fabric.js?
 
