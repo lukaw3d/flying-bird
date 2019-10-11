@@ -31,3 +31,11 @@ Share to twitter
 Flying, dead
 Initial: position, generate map
 
+
+## Missing
+
+- Leaderboard -> localStorage
+- Advanced collision mask
+- Some sprites
+- Make background around bird sprites transparent
+- Replace sprites with production ready ones
