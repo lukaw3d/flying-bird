@@ -82,7 +82,7 @@ function updateState(delta) {
 }
 
 function getScore() {
-    return _.filter(state.map.columns, ({x, w}) => state.bird.x > x + w).length;
+    return _.filter(state.map.columns, ({x, w}) => state.bird.x > x + w).length / 2;
 }
 function getTopScore() {
     return localStorage.topScore ? parseFloat(localStorage.topScore) : null;
