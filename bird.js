@@ -4,6 +4,34 @@
 // _ = lodash
 const WIDTH = 500;
 const HEIGHT = 500;
+const BIRD_SPRITES_PROMISE = Promise.all([
+    loadImage('./sprites/bird1.png'),
+    loadImage('./sprites/bird2.png'),
+    loadImage('./sprites/bird3.png'),
+]);
+const BIRD_JUMPING_SPRITES_PROMISE = Promise.all([
+    loadImage('./sprites/bird_jump1.png'),
+    loadImage('./sprites/bird_jump2.png'),
+]);
+let BIRD_SPRITES = [];
+let BIRD_JUMPING_SPRITES = [];
+
+const initializing = Promise.all([
+    BIRD_SPRITES_PROMISE,
+    BIRD_JUMPING_SPRITES_PROMISE
+]).then(([_BIRD_SPRITES, _BIRD_JUMPING_SPRITES]) => {
+    BIRD_SPRITES = _BIRD_SPRITES;
+    BIRD_JUMPING_SPRITES = _BIRD_JUMPING_SPRITES;
+});
+
+
+function loadImage(src) {
+    return new Promise((resolve) => {
+        let img = new Image();
+        img.addEventListener('load', () => resolve(img));
+        img.setAttribute('src', src);
+    });
+}
 
 /** @type {HTMLAnchorElement} */
 const shareLink = document.getElementById('share');
@@ -31,6 +59,7 @@ function generateInitialState() {
             xspeed: 0.4,
             yspeed: 0,
             yaccel: 0,
+            spriteTime: 0,
         },
         map: generateMap(),
     };
@@ -63,12 +92,13 @@ const ACCEL_BOOST = GRAVITY / 10;
 
 function updateState(delta) {
     if (state.playing === 'flying') {
-        state.bird.yaccel = _.clamp(state.bird.yaccel + ACCEL_BOOST / 5, -ACCEL_BOOST, 0);
+        state.bird.yaccel = _.clamp(state.bird.yaccel + ACCEL_BOOST / 20, -ACCEL_BOOST, 0);
 
         state.bird.yspeed += (GRAVITY + state.bird.yaccel) * delta * delta;
 
         state.bird.x += state.bird.xspeed * delta;
         state.bird.y += state.bird.yspeed * delta;
+        state.bird.spriteTime += delta;
 
         const mapCollision = state.map.columns.some((rect) => {
             return state.bird.x + state.bird.w > rect.x &&
@@ -135,8 +165,10 @@ function draw(time) {
         ctx.fillRect(x, y, w, h);
     });
 
-    ctx.fillStyle = '#e81';
-    ctx.fillRect(state.bird.x, state.bird.y, state.bird.w, state.bird.h);
+    const normalSprite = BIRD_SPRITES[Math.floor(state.bird.spriteTime / 60) % BIRD_SPRITES.length];
+    const jumpingSprite = BIRD_JUMPING_SPRITES[Math.floor(state.bird.spriteTime / 60) % BIRD_JUMPING_SPRITES.length];
+    const sprite = state.bird.yaccel < 0 ? jumpingSprite : normalSprite;
+    ctx.drawImage(sprite, state.bird.x, state.bird.y);
 
     ctx.resetTransform();
     if (state.playing === 'flying') {
@@ -156,4 +188,7 @@ function draw(time) {
 
     window.requestAnimationFrame(draw);
 }
-window.requestAnimationFrame(draw);
+
+initializing.then(() => {
+    window.requestAnimationFrame(draw);
+});
