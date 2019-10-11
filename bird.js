@@ -10,7 +10,8 @@ const canvas = document.getElementById('canvas');
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
 const ctx = canvas.getContext('2d');
-
+ctx.font = 'normal 18px sans-serif';
+ctx.textAlign = 'center';
 
 
 let state = generateInitialState();
@@ -69,16 +70,20 @@ function updateState(delta) {
 
         if (mapCollision || floorCollision) {
             state.playing = 'dead';
+            saveScore();
         }
-
-        console.log(state.bird.yspeed);
     }
 }
 
 function getScore() {
     return _.filter(state.map.columns, ({x, w}) => state.bird.x > x + w).length;
 }
-
+function getTopScore() {
+    return localStorage.topScore ? parseFloat(localStorage.topScore) : null;
+}
+function saveScore() {
+    localStorage.topScore = Math.max(getTopScore(), getScore());
+}
 
 
 canvas.addEventListener('click', () => {
@@ -116,14 +121,19 @@ function draw(time) {
     }
 
     ctx.resetTransform();
-    ctx.font = 'normal 18px sans-serif';
-    ctx.fillStyle = '#cc6';
-    ctx.textAlign = 'center';
     if (state.playing === 'flying') {
+        ctx.fillStyle = '#cc6';
         ctx.fillText(`Score ${getScore()}`, WIDTH / 2, 50);
     }
     if (state.playing === 'dead') {
-        ctx.fillText(`Dead. Scored ${getScore()}`, WIDTH / 2, 50);
+        ctx.fillStyle = '#dd9';
+        ctx.fillRect(WIDTH / 2 - 100, 150, 200, 180);
+        ctx.fillStyle = '#aa6';
+        ctx.fillText(`Score ${getScore()}`, WIDTH / 2, 200);
+        if (getTopScore()) ctx.fillText(`Best ${getTopScore()}`, WIDTH / 2, 280);
+
+        ctx.fillStyle = '#666';
+        ctx.fillText(`Click to restart`, WIDTH / 2, 400);
     }
 
     lastUpdate = time;
