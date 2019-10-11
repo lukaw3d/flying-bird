@@ -5,6 +5,8 @@
 const WIDTH = 500;
 const HEIGHT = 500;
 
+/** @type {HTMLAnchorElement} */
+const shareLink = document.getElementById('share');
 /** @type {HTMLCanvasElement} */
 const canvas = document.getElementById('canvas');
 canvas.width = WIDTH;
@@ -14,9 +16,11 @@ ctx.font = 'normal 18px sans-serif';
 ctx.textAlign = 'center';
 
 
+
 let state = generateInitialState();
 
 function generateInitialState() {
+    shareLink.style.display = 'none';
     return {
         playing: 'dead', // or 'flying'
         bird: {
@@ -75,10 +79,18 @@ function updateState(delta) {
         const floorCollision = state.bird.y + state.bird.h > HEIGHT;
 
         if (mapCollision || floorCollision) {
-            state.playing = 'dead';
-            saveScore();
+            die();
         }
     }
+}
+function die() {
+    state.playing = 'dead';
+    saveScore();
+    shareLink.style.display = 'block';
+
+    shareLink.href = 'https://twitter.com/intent/tweet' +
+        '?url=' + encodeURIComponent(location.origin) +
+        '&text=' +encodeURIComponent(`I scored ${getScore()} points on a bird`);
 }
 
 function getScore() {
