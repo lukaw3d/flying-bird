@@ -37,10 +37,10 @@ function generateMap() {
     const V_SPACE = 200;
 
     return {
-        columns: _.range(4, 1000).map((i) => {
+        columns: _.range(3, 1000).map((i) => {
             return {
                 x: (i + (Math.random() - 0.5) / 4) * H_SPACE,
-                y: _.clamp(Math.random() * HEIGHT, HEIGHT * 0.2, HEIGHT * 0.8),
+                y: _.clamp(Math.random() * HEIGHT, HEIGHT * 0.2, (HEIGHT - V_SPACE) * 0.8),
                 gap: V_SPACE,
                 w: 30,
             };
