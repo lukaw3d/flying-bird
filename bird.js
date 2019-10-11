@@ -42,7 +42,7 @@ function generateMap() {
                 x: (i + (Math.random() - 0.5) / 4) * H_SPACE,
                 y: _.clamp(Math.random() * HEIGHT, HEIGHT * 0.2, (HEIGHT - V_SPACE) * 0.8),
                 gap: V_SPACE,
-                w: 30,
+                w: 60,
             };
         }).flatMap(({x, y, w, gap}) => {
             return [
