@@ -72,7 +72,7 @@ function updateState(delta) {
                 state.bird.y + state.bird.h > rect.y &&
                 state.bird.y < rect.y + rect.h;
         });
-        const floorCollision = state.bird.y > HEIGHT;
+        const floorCollision = state.bird.y + state.bird.h > HEIGHT;
 
         if (mapCollision || floorCollision) {
             state.playing = 'dead';
